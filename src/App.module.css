@@ -1,0 +1,173 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  height: 100vh;
+}
+
+.chatContainer {
+  margin: 0 auto;
+  width: 95%;
+}
+
+.chatContainer > section:nth-child(1) {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 75px;
+  margin-bottom: 50px;
+}
+
+.chatContainer > section:nth-child(1) > div {
+  position: relative;
+  width: 130px;
+  height: 130px;
+}
+
+.chatContainer > section:nth-child(1) > div > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.chatContainer > section:nth-child(1) > div > p {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, -29%);
+  color: rgb(0, 0, 0);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+}
+
+.conversationContainer {
+  /* background-color: aqua; */
+  height: 380px;
+  overflow-y: scroll;
+}
+
+.messageContainer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.messageBox {
+  display: inline-block;
+}
+
+.messageBox > p {
+  background-color: rgb(252, 190, 66);
+  border-radius: 20px 30px 20px 20px;
+  box-sizing: border-box;
+  padding: 20px 30px;
+}
+
+.replyContainer {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.replyBox {
+  display: flex;
+  align-items: center;
+}
+
+.replyBox img {
+  height: 75.54px;
+  width: 75.54px;
+}
+
+.replyBox p {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 40px 20px 20px 20px;
+  box-sizing: border-box;
+  padding: 20px 30px;
+}
+
+.chatContainer > form {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 30px;
+  width: 95%;
+  max-width: 700px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.chatContainer > form > div {
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.15);
+  display: flex;
+}
+
+.chatContainer > form > div > input {
+  flex: 6;
+  outline: none;
+  border: none;
+  box-sizing: border-box;
+  padding: 15px 30px;
+}
+
+.chatContainer > form > div > div {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.chatContainer > form > div > div > img {
+  cursor: pointer;
+}
+
+@media screen and (min-height: 500px) {
+  .conversationContainer {
+    height: 280px;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (min-height: 650px) {
+  .conversationContainer {
+    height: 380px;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (min-height: 700px) {
+  .conversationContainer {
+    height: 460px;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (min-height: 840px) {
+  .conversationContainer {
+    height: 580px;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (min-height: 900px) {
+  .conversationContainer {
+    height: 640px;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (min-height: 1100px) {
+  .conversationContainer {
+    height: 850px;
+    overflow-y: scroll;
+  }
+}
