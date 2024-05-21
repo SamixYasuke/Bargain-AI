@@ -61,7 +61,7 @@ const App: React.FC = () => {
       // Get the last match from the array
       const lastMatch: string = matches[matches.length - 1];
       let extractedNumber: number;
-      if (/k$/i.test(lastMatch)) {
+      if (/k$/i.test(`${lastMatch}k`)) {
         // If the number ends with 'k' or 'K', multiply by 1000
         extractedNumber = parseFloat(lastMatch.replace(/k/i, "")) * 1000;
         console.log(extractedNumber);
