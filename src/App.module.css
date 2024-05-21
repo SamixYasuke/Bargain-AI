@@ -4,6 +4,7 @@ body {
   margin: 0;
   position: relative;
   height: 100vh;
+  font-family: "Inter", sans-serif;
 }
 
 .chatContainer {
@@ -65,6 +66,8 @@ body {
   border-radius: 20px 30px 20px 20px;
   box-sizing: border-box;
   padding: 20px 30px;
+  color: rgba(255, 255, 255, 1);
+  font-family: "Inter", sans-serif;
 }
 
 .replyContainer {
@@ -89,6 +92,7 @@ body {
   border-radius: 40px 20px 20px 20px;
   box-sizing: border-box;
   padding: 20px 30px;
+  font-family: "Inter", sans-serif;
 }
 
 .chatContainer > form {
