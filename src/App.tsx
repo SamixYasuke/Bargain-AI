@@ -16,6 +16,8 @@ import acceptOfferIcon from "./assets/accept offer icon.png";
 import bargainAI from "./utility/bargain.ai";
 import CostPriceModal from "./components/CostPriceModal";
 import AcceptOfferModal from "./components/AcceptOfferModal";
+import WinOfferModal from "./components/WinOfferModal";
+import LoseOfferModal from "./components/LoseOfferModal";
 
 interface Message {
   type: "user" | "ai";
@@ -29,8 +31,10 @@ const App: React.FC = () => {
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const [costPriceModalIsOpen, setCostPriceModalIsOpen] = useState(false);
   const [acceptOfferModalIsOpen, setAcceptOfferModalIsOpen] = useState(false);
-  const [costPrice, setCostPrice] = useState<number | null>(null);
-  const [currentOffer, setCurrentOffer] = useState<number | null>(null);
+  const [winOfferModalIsOpen, setWinOfferModalIsOpen] = useState(false);
+  const [loseOfferModalIsOpen, setLoseOfferModalIsOpen] = useState(false);
+  const [costPrice, setCostPrice] = useState<number>(Number);
+  const [currentOffer, setCurrentOffer] = useState<number>(Number);
 
   const scrollToBottom = () => {
     if (conversationEndRef.current) {
@@ -47,11 +51,29 @@ const App: React.FC = () => {
   }, []);
 
   const extractNumberFromResponse = (response: string): number | null => {
-    const match = response.match(/₦?(\d{1,3}(,\d{3})*(\.\d{1,2})?)/);
-    if (match && match[1]) {
-      const extractedNumber = parseFloat(match[1].replace(/,/g, ""));
-      return extractedNumber;
+    // Regex to find all instances of numbers with optional '₦' prefix and 'k' shorthand
+    const matches: RegExpMatchArray | null = response.match(
+      /₦?(\d{1,3}(,\d{3})*(\.\d{1,2})?|\d+k)/gi
+    );
+
+    console.log(matches);
+    if (matches && matches.length > 0) {
+      // Get the last match from the array
+      const lastMatch: string = matches[matches.length - 1];
+      let extractedNumber: number;
+      if (/k$/i.test(lastMatch)) {
+        // If the number ends with 'k' or 'K', multiply by 1000
+        extractedNumber = parseFloat(lastMatch.replace(/k/i, "")) * 1000;
+        console.log(extractedNumber);
+        return extractedNumber;
+      } else {
+        // Remove '₦' if present and any commas
+        extractedNumber = parseFloat(lastMatch.replace(/₦|,/g, ""));
+        console.log(extractedNumber);
+        return extractedNumber;
+      }
     }
+
     return null;
   };
 
@@ -79,11 +101,11 @@ const App: React.FC = () => {
       <main className={appStyle.chatContainer}>
         <section>
           <div>
-            <img src={costPriceImg} alt="costPriceImg" />
+            <img src={costPriceImg} alt="Cost Price" />
             <p>{`₦${costPrice !== null ? costPrice : "Not available"}`}</p>
           </div>
           <div>
-            <img src={currentPriceImg} alt="currentPriceImg" />
+            <img src={currentPriceImg} alt="Current Offer" />
             <p>{`₦${
               currentOffer !== null ? currentOffer : "Not available"
             }`}</p>
@@ -105,7 +127,7 @@ const App: React.FC = () => {
                 </div>
               ) : (
                 <div className={appStyle.replyBox}>
-                  <img src={aiIcon} alt="aiIcon" />
+                  <img src={aiIcon} alt="AI Icon" />
                   <p>{message.text}</p>
                 </div>
               )}
@@ -131,12 +153,12 @@ const App: React.FC = () => {
             <div className={appStyle.iconContainer}>
               <img
                 src={acceptOfferIcon}
-                alt="acceptOfferIcon"
+                alt="Accept Offer Icon"
                 onClick={() => {
                   setAcceptOfferModalIsOpen(true);
                 }}
               />
-              <img src={sendBtn} alt="sendBtn" onClick={handleChat} />
+              <img src={sendBtn} alt="Send Button" onClick={handleChat} />
             </div>
           </div>
         </form>
@@ -151,7 +173,17 @@ const App: React.FC = () => {
       {acceptOfferModalIsOpen && (
         <AcceptOfferModal
           setAcceptOfferModalIsOpen={setAcceptOfferModalIsOpen}
+          setWinOfferModalIsOpen={setWinOfferModalIsOpen}
+          setLoseOfferModalIsOpen={setLoseOfferModalIsOpen}
+          currentOffer={currentOffer}
+          costPrice={costPrice}
         />
+      )}
+      {winOfferModalIsOpen && (
+        <WinOfferModal setWinOfferModalIsOpen={setWinOfferModalIsOpen} />
+      )}
+      {loseOfferModalIsOpen && (
+        <LoseOfferModal setLoseOfferModalIsOpen={setLoseOfferModalIsOpen} />
       )}
     </>
   );
