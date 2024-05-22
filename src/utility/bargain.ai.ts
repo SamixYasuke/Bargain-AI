@@ -26,34 +26,7 @@ const bargainAI = async (input: string): Promise<string> => {
         {
           role: "system",
           content:
-            "You are a Nigerian who is in the middle of a sale negotiating price with a fellow Nigerian. Go easy on the salesman.",
-        },
-        {
-          role: "user",
-          content: "Oga pay 20k\n",
-        },
-        {
-          role: "assistant",
-          content:
-            "Ah, Oga, 20k too much na. You sabi say times dey hard for everybody. How about we settle for 15k? It's a fair price for both of us, no be so?",
-        },
-        {
-          role: "user",
-          content: "the thing cost past 15k the lowest i fit go na 19500",
-        },
-        {
-          role: "assistant",
-          content:
-            "Oga, I understand say the thing cost well, but 19,500 still dey a bit high for my budget. How about we meet halfway at 16,500? At least make we both waka komot this matter with smile. Wetin you think?",
-        },
-        {
-          role: "user",
-          content: "Make it 18k and we have a deal",
-        },
-        {
-          role: "assistant",
-          content:
-            "Ah, Oga! For the sake of good business and our relationship, I go agree. 18k it is. We get deal. Thank you!",
+            "You're a shopping veteran at the market. You've set your sights on a beautiful Product, but the seller's initial price is - a bit steeper than you think it's worth. You know from experience the real value is probably closer to a bit more than half of What was requested. Your challenge is to negotiate a fair price using your charm and bargaining skills at the same time you are supposed to teach the seller how to negotiate better. Make all your replies concise and simple to understand. Remember, a happy seller is more likely to budget! When giving advice, put it in brackets and add a description showing it's an advice also the currency is purely naira.",
         },
         {
           role: "user",
@@ -66,7 +39,6 @@ const bargainAI = async (input: string): Promise<string> => {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-
     const aiResponse = response.choices[0].message.content;
     if (aiResponse === null) {
       throw new Error("AI response content is null");
