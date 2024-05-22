@@ -18,6 +18,7 @@ import CostPriceModal from "./components/CostPriceModal";
 import AcceptOfferModal from "./components/AcceptOfferModal";
 import WinOfferModal from "./components/WinOfferModal";
 import LoseOfferModal from "./components/LoseOfferModal";
+import getCurrentOffer from "./utility/getCurrentOffer";
 
 interface Message {
   type: "user" | "ai";
@@ -50,32 +51,30 @@ const App: React.FC = () => {
     setCostPriceModalIsOpen(true);
   }, []);
 
-  const extractNumberFromResponse = (response: string): number | null => {
-    // Regex to find all instances of numbers with optional '₦' prefix and 'k' shorthand
-    const matches: RegExpMatchArray | null = response.match(
-      /₦?(\d{1,3}(,\d{3})*(\.\d{1,2})?|\d+k)/gi
-    );
+  // const extractNumberFromResponse = (response: string): number | null => {
+  //   // Regex to find all instances of numbers with optional '₦' prefix and 'k' shorthand
+  //   const matches: RegExpMatchArray | null = response.match(
+  //     /₦?(\d{1,3}(,\d{3})*(\.\d{1,2})?|\d+k)/gi
+  //   );
 
-    console.log(matches);
-    if (matches && matches.length > 0) {
-      // Get the last match from the array
-      const lastMatch: string = matches[matches.length - 1];
-      let extractedNumber: number;
-      if (/k$/i.test(`${lastMatch}k`)) {
-        // If the number ends with 'k' or 'K', multiply by 1000
-        extractedNumber = parseFloat(lastMatch.replace(/k/i, "")) * 1000;
-        console.log(extractedNumber);
-        return extractedNumber;
-      } else {
-        // Remove '₦' if present and any commas
-        extractedNumber = parseFloat(lastMatch.replace(/₦|,/g, ""));
-        console.log(extractedNumber);
-        return extractedNumber;
-      }
-    }
-
-    return null;
-  };
+  //   console.log(matches);
+  //   if (matches && matches.length > 0) {
+  //     // Get the last match from the array
+  //     const lastMatch: string = matches[matches.length - 1];
+  //     let extractedNumber: number;
+  //     if (/k$/i.test(`${lastMatch}k`)) {
+  //       // If the number ends with 'k' or 'K', multiply by 1000
+  //       extractedNumber = parseFloat(lastMatch.replace(/k/i, "")) * 1000;
+  //       console.log(extractedNumber);
+  //       return extractedNumber;
+  //     } else {
+  //       // Remove '₦' if present and any commas
+  //       extractedNumber = parseFloat(lastMatch.replace(/₦|,/g, ""));
+  //       console.log(extractedNumber);
+  //       return extractedNumber;
+  //     }
+  //   }
+  // };
 
   const handleChat = async (e: FormEvent) => {
     e.preventDefault();
@@ -86,9 +85,16 @@ const App: React.FC = () => {
       try {
         const response = await bargainAI(userInput);
         setConversation((prev) => [...prev, { type: "ai", text: response }]);
-        const extractedNumber = extractNumberFromResponse(response);
-        if (extractedNumber !== null) {
-          setCurrentOffer(extractedNumber);
+        // const extractedNumber = extractNumberFromResponse(response);
+        const getCurrentPrice = await getCurrentOffer(response);
+        const currentPriceArray = JSON.parse(getCurrentPrice);
+        const lastIndexInCurrentPriceArray =
+          currentPriceArray[currentPriceArray.length - 1];
+        console.log(currentPriceArray);
+        console.log(lastIndexInCurrentPriceArray);
+
+        if (lastIndexInCurrentPriceArray !== null) {
+          setCurrentOffer(lastIndexInCurrentPriceArray);
         }
       } finally {
         setIsLoading(false);
@@ -106,9 +112,7 @@ const App: React.FC = () => {
           </div>
           <div>
             <img src={currentPriceImg} alt="Current Offer" />
-            <p>{`₦${
-              currentOffer !== null ? currentOffer : "Not available"
-            }`}</p>
+            <p>{`${currentOffer !== null ? currentOffer : "Not available"}`}</p>
           </div>
         </section>
         <section className={appStyle.conversationContainer}>
