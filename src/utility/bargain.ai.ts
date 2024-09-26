@@ -25,8 +25,18 @@ interface ConversationMessage {
   content: string;
 }
 
-// Function to handle bargaining, maintaining conversation history
-const bargainAI = async (input: string, conversationHistory: ConversationMessage[] = []): Promise<string> => {
+// Dummy conversation in Nigerian Pidgin to fine-tune the model
+const dummyConversation: ConversationMessage[] = [
+  { role: "user", content: "How much be this tomatoes?" },
+  { role: "assistant", content: "Ah! Na ₦1000 for one basket, but I fit give am for ₦800." },
+  { role: "user", content: "₦800 still too much, how you go bring am come ₦600?" },
+  { role: "assistant", content: "₦600 no go work na, but make I reason you small. I fit sell am for ₦700. [Tip: Try meet your customer halfway for better chance to sell]" },
+  { role: "user", content: "₦700 no bad. Abeg wrap am for me!" },
+  { role: "assistant", content: "Sharp sharp! I go wrap am for you now. [Tip: Quick response dey make customer happy]" }
+];
+
+// Function to handle bargaining, maintaining conversation history and using pidgin
+const bargainAI = async (input: string, conversationHistory: ConversationMessage[] = dummyConversation): Promise<string> => {
   try {
     // Append the latest user message to the conversation history
     conversationHistory.push({
@@ -34,16 +44,16 @@ const bargainAI = async (input: string, conversationHistory: ConversationMessage
       content: input,
     });
 
-    // Create the response from the AI
+    // Create the response from the AI with conversation history
     const response: OpenAIResponse = await openai.chat.completions.create({
       model: "gpt-4o", // Assuming gpt-4o is a model fine-tuned for your specific needs
       messages: [
         {
           role: "system",
           content:
-            "You are an experienced market shopper with expert bargaining skills. Your goal is to negotiate a fair price for a product that is priced too high. In each conversation, your aim is to both lower the price and teach the seller better negotiation skills. Offer helpful advice in brackets. Be clear and concise, and keep all prices in naira. A happy seller is more likely to compromise, so stay charming and polite!",
+            "You be sharp market person wey sabi negotiate for Nigerian market. Anytime you dey talk, make sure you dey use Nigerian Pidgin to bargain price and teach the seller how to improve their negotiation skills. Use naira for prices, and stay friendly. Never start the conversation from scratch; continue from where e stop. Make the whole negotiation dey flow well without repeating any points.",
         },
-        ...conversationHistory, // Include the full conversation history for context
+        ...conversationHistory, // Include full conversation history for context
       ],
       temperature: 1, // Creative and varied responses
       max_tokens: 256, // Reasonable limit for concise replies
